@@ -1,0 +1,16 @@
+*~
+\#*
+.\#*
+.DS_Store
+compiled/
+/doc/
+a.out
+foo
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+extern/
+symengine/
