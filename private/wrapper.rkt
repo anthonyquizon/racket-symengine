@@ -2,6 +2,7 @@
 
 (require (prefix-in ffi: "ffi.rkt")
          (prefix-in r: racket)
+         (for-syntax syntax/to-string)
          racket/struct)
 
 (provide (struct-out Sym)
@@ -38,11 +39,13 @@
 (define-syntax (define-symbolic stx)
   (syntax-case stx ()
     [(_ var)
-     (identifier? #'var)
-     (syntax/loc stx (define var (symbol (symbol->string (syntax->datum #'var)))))]
-    [(_ v ...)
-     (andmap identifier? (syntax->list #'(v ...)))
-     (syntax/loc stx (define-values (v ...) (values (symbol (symbol->string (syntax->datum #'v))) ...)))]))
+     (with-syntax ([s (syntax->string #'(var))])
+       (identifier? #'var)
+       (syntax/loc stx (define var (symbol s))))]
+    [(_ v0 v ...)
+      #'(begin
+          (define-symbolic v0)
+          (define-symbolic v ...))]))
 
 (define (integer i)
   (cond 
