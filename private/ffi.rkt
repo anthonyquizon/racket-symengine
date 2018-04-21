@@ -8,6 +8,8 @@
          basic_add
          basic_mul
          basic_eq
+         basic_str
+         basic_exp
          symbol_set 
          integer_set_ui
          integer_get_ui
@@ -61,6 +63,9 @@
 (define-symengine basic_mul (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
 (define-symengine basic_eq (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
+
+(define-symengine basic_str (_fun _BASIC_STRUCT-pointer -> _string))
+(define-symengine basic_exp (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
 ;CWRAPPER_OUTPUT_TYPE (basic s, unsigned long i);
 

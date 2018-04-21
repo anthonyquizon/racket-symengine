@@ -1,5 +1,5 @@
 #lang info
-(define collection "racket-symengine")
+(define collection "symengine")
 (define deps '("base"))
 (define build-deps '("scribble-lib" "racket-doc" "rackunit-lib"))
 (define scribblings '(("scribblings/racket-symengine.scrbl" ())))
