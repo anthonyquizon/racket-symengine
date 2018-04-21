@@ -67,17 +67,4 @@
 (define-symengine basic_str (_fun _BASIC_STRUCT-pointer -> _string/utf-8 ))
 (define-symengine basic_exp (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
-;CWRAPPER_OUTPUT_TYPE (basic s, unsigned long i);
 
-;(define x (basic_new_heap))
-;(define y (basic_new_heap))
-;(define z (basic_new_heap))
-
-;(void (symbol_set x "x"))
-;(void (symbol_set y "y"))
-;(void (symbol_set y "z"))
-;(void (integer_set_ui x 2))
-;(void (integer_set_ui y 3))
-;(void (basic_add z x y))
-
-;(integer_get_ui x)
