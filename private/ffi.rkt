@@ -64,7 +64,7 @@
 
 (define-symengine basic_eq (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
-(define-symengine basic_str (_fun _BASIC_STRUCT-pointer -> _string))
+(define-symengine basic_str (_fun _BASIC_STRUCT-pointer -> _string/utf-8 ))
 (define-symengine basic_exp (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
 ;CWRAPPER_OUTPUT_TYPE (basic s, unsigned long i);

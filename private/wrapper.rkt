@@ -9,32 +9,29 @@
          define-symbolic
          integer
          symbol
-         sym/+
-         sym/=)
+         basic->string
+         (rename-out [sym/* *] 
+                     [sym/+ +] 
+                     [sym/= =] 
+                     [sym/!= !=]))
 
 (module+ test
   (require rackunit))
 
-(struct Sym (label value) 
+(struct Sym (value) 
   #:methods 
   gen:custom-write
   [(define write-proc
      (make-constructor-style-printer 
        (lambda [_s] 'Symbol) 
-       (lambda [s] (print-sym s))))])
+       (lambda [s] (list (basic->string s)))))])
 
-(define val Sym-value)
-(define label Sym-label)
-
-(define (print-sym s)
-  (cond
-    [(integer? s) `(Integer ,(ffi:integer_get_ui (val s)))]
-    [else `(basic ,(label s) ,(val s))]))
+(define (val s) (Sym-value s))
 
 (define (symbol str) 
   (define s (ffi:basic_new_heap))
   (ffi:symbol_set s str)
-  (Sym str s))
+  (Sym s))
 
 (define-syntax (define-symbolic stx)
   (syntax-case stx ()
@@ -52,7 +49,7 @@
     [(r:integer? i) 
      (define s (ffi:basic_new_heap))
      (ffi:integer_set_ui s i)
-     (Sym "" s)]
+     (Sym s)]
     [else (raise 'sym-type-error #t)]))
 
 (define (real i)
@@ -60,7 +57,7 @@
     [(r:real? i) 
      (define s (ffi:basic_new_heap))
      (ffi:real_double_set_d s i)
-     (Sym "" s)]
+     (Sym s)]
     [else (raise 'sym-type-error #t)]))
 
 (define (set_rational i j)
@@ -72,7 +69,7 @@
    (ffi:integer_set_ui m )
 
    (ffi:rational_set s n m)
-   (Sym "" s))
+   (Sym s))
 
 ;(define (rational i [j null])
   ;(cond 
@@ -91,20 +88,23 @@
 (define (sym/+ a b)
   (define s (ffi:basic_new_heap))
   (ffi:basic_add s (val a) (val b))
-  (Sym "add" s))
+  (Sym s))
 
 (define (sym/* a b)
   (define s (ffi:basic_new_heap))
   (ffi:basic_mul s (val a) (val b))
-  (Sym "mult" s))
+  (Sym s))
 
 (define (sym/exp a)
   (define s (ffi:basic_new_heap))
   (ffi:basic_exp s (val a))
-  (Sym "exp" s))
+  (Sym s))
 
 (define (sym/= a b)
   (= (ffi:basic_eq (val a) (val b)) 1))
+
+(define (sym/!= a b)
+  (= (ffi:basic_eq (val a) (val b)) 0))
 
 ;(module+ test 
   ;(let ([x (symbol "x")]
@@ -127,7 +127,7 @@
 (define (symbol? s)
   (= (ffi:is_a_Symbol (val s)) 1))
 
-(define (str s)
+(define (basic->string s)
   (ffi:basic_str (val s)))
 
 ;(define (real? s)
