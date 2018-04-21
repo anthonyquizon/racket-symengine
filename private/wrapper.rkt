@@ -8,8 +8,10 @@
 (provide (struct-out Sym)
          define-symbolic
          integer
+         integer?
+         number?
          symbol
-         basic->string
+         symbol->string
          (rename-out [sym/* *] 
                      [sym/+ +] 
                      [sym/= =] 
@@ -19,12 +21,18 @@
   (require rackunit))
 
 (struct Sym (value) 
-  #:methods 
-  gen:custom-write
+  #:methods gen:equal+hash 
+  [(define (equal-proc a b equal?-recur) (sym/= a b))
+   (define (hash-proc a hash-recur) 1)
+   (define (hash2-proc a hash-recur) 1)]
+
+  #:methods gen:custom-write  
   [(define write-proc
      (make-constructor-style-printer 
        (lambda [_s] 'Symbol) 
-       (lambda [s] (list (basic->string s)))))])
+       (lambda [s] (list (symbol->string s)))))]
+  
+  )
 
 (define (val s) (Sym-value s))
 
@@ -127,7 +135,7 @@
 (define (symbol? s)
   (= (ffi:is_a_Symbol (val s)) 1))
 
-(define (basic->string s)
+(define (symbol->string s)
   (ffi:basic_str (val s)))
 
 ;(define (real? s)
