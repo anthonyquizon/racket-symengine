@@ -10,9 +10,10 @@
          basic_eq
          basic_str
          basic_exp
+         basic_neg
          symbol_set 
-         integer_set_ui
-         integer_get_ui
+         integer_set_si
+         integer_get_si
 
          real_double_set_d
 
@@ -51,8 +52,8 @@
 (define-symengine is_a_Symbol (_fun _BASIC_STRUCT-pointer -> _int))
 (define-symengine is_a_RealDouble (_fun _BASIC_STRUCT-pointer -> _int))
 
-(define-symengine integer_set_ui (_fun _BASIC_STRUCT-pointer _ullong -> _int))
-(define-symengine integer_get_ui (_fun _BASIC_STRUCT-pointer -> _ullong))
+(define-symengine integer_set_si (_fun _BASIC_STRUCT-pointer _sllong -> _int))
+(define-symengine integer_get_si (_fun _BASIC_STRUCT-pointer -> _sllong))
 
 (define-symengine real_double_set_d (_fun _BASIC_STRUCT-pointer _double -> _int))
 
@@ -66,5 +67,6 @@
 
 (define-symengine basic_str (_fun _BASIC_STRUCT-pointer -> _string/utf-8 ))
 (define-symengine basic_exp (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
+(define-symengine basic_neg (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
 

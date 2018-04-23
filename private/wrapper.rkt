@@ -8,14 +8,16 @@
 (provide (struct-out Sym)
          define-symbolic
          integer
+         symbol
          integer?
          number?
-         symbol
+         symbol?
          symbol->string
          (rename-out [sym/* *] 
                      [sym/+ +] 
                      [sym/= =] 
-                     [sym/!= !=]))
+                     [sym/!= !=]
+                     [sym/neg neg]))
 
 (module+ test
   (require rackunit))
@@ -56,7 +58,7 @@
   (cond 
     [(r:integer? i) 
      (define s (ffi:basic_new_heap))
-     (ffi:integer_set_ui s i)
+     (ffi:integer_set_si s i)
      (Sym s)]
     [else (raise 'sym-type-error #t)]))
 
@@ -73,8 +75,8 @@
    (define n (ffi:basic_new_heap))
    (define m (ffi:basic_new_heap))
 
-   (ffi:integer_set_ui n )
-   (ffi:integer_set_ui m )
+   (ffi:integer_set_si n )
+   (ffi:integer_set_si m )
 
    (ffi:rational_set s n m)
    (Sym s))
@@ -89,7 +91,7 @@
 
 (define (integer-value s)
   (cond 
-    [(integer? s) (ffi:integer_get_ui (val s))]
+    [(integer? s) (ffi:integer_get_si (val s))]
     [else (raise 'sym-type-error #t)]))
 
 ;;TODO generics 
@@ -113,6 +115,11 @@
 
 (define (sym/!= a b)
   (= (ffi:basic_eq (val a) (val b)) 0))
+
+(define (sym/neg a)
+  (define s (ffi:basic_new_heap))
+  (ffi:basic_neg s (val a))
+  (Sym s))
 
 ;(module+ test 
   ;(let ([x (symbol "x")]
