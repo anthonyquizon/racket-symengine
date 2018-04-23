@@ -60,6 +60,7 @@
      (define s (ffi:basic_new_heap))
      (ffi:integer_set_si s i)
      (Sym s)]
+    [(integer? i) i]
     [else (raise 'sym-type-error #t)]))
 
 (define (real i)
@@ -70,24 +71,21 @@
      (Sym s)]
     [else (raise 'sym-type-error #t)]))
 
-(define (set_rational i j)
-   (define s (ffi:basic_new_heap))
-   (define n (ffi:basic_new_heap))
-   (define m (ffi:basic_new_heap))
+(define (rational i [j null])
+  (define (set_rational i j)
+    (define s (ffi:basic_new_heap))
+    (define m (integer i))
+    (define n (integer j))
 
-   (ffi:integer_set_si n )
-   (ffi:integer_set_si m )
+    (ffi:rational_set s (val m) (val n))
+    (Sym s))
 
-   (ffi:rational_set s n m)
-   (Sym s))
-
-;(define (rational i [j null])
-  ;(cond 
-    ;[(r:rational? i) 
-     ;(set_rational (r:numerator i) (r:denominator i))]
-    ;[(and (r:integer? i) (r:integer? j))
-     ;(set_rational i j)]
-    ;[else (raise 'sym-type-error #t)]))
+  (cond 
+    [(and (not j) (r:rational? i)) 
+     (set_rational (r:numerator i) (r:denominator i))]
+    [(and (r:integer? i) (r:integer? j))
+     (set_rational i j)]
+    [else (raise 'sym-type-error #t)]))
 
 (define (integer-value s)
   (cond 
