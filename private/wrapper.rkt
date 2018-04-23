@@ -8,9 +8,11 @@
 (provide (struct-out Sym)
          define-symbolic
          integer
+         rational
          symbol
-         integer?
          number?
+         integer?
+         rational?
          symbol?
          symbol->string
          (rename-out [sym/* *] 
@@ -81,9 +83,10 @@
     (Sym s))
 
   (cond 
-    [(and (not j) (r:rational? i)) 
+    [(and (null? j) (r:rational? i)) 
      (set_rational (r:numerator i) (r:denominator i))]
-    [(and (r:integer? i) (r:integer? j))
+    [(and (or (r:integer? i) integer? i) 
+          (or (r:integer? j) (integer? j)))
      (set_rational i j)]
     [else (raise 'sym-type-error #t)]))
 
@@ -131,8 +134,8 @@
 (define (integer? s)
   (= (ffi:is_a_Integer (val s)) 1))
 
-;(define (rational? s)
-  ;(= (ffi:is_a_Rational (val s)) 1))
+(define (rational? s)
+  (= (ffi:is_a_Rational (val s)) 1))
 
 ;(define (complex? s)
   ;(= (ffi:is_a_Complex (val s)) 1))
