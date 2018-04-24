@@ -5,12 +5,17 @@
          ffi/unsafe/alloc)
 
 (provide basic_new_heap
+         setbasic_new
+         setbasic_size
+         setbasic_get
          basic_add
          basic_mul
+         basic_div
          basic_eq
          basic_str
          basic_exp
          basic_neg
+         basic_free_symbols
          symbol_set 
          integer_set_si
          integer_get_si
@@ -31,18 +36,22 @@
 (define-ffi-definer define-symengine (ffi-lib "libsymengine"))
 
 (define _BASIC_STRUCT-pointer (_cpointer 'BASIC_STRUCT))
-(define _TEUCHOS_HANDLE-pointer (_cpointer 'TEUCHOS_HANDLE))
-(define-cstruct _BASIC ([teuchos_handle _TEUCHOS_HANDLE-pointer]
-                        [teuchos_strength _int]))
-
-(define-symengine basic_free_stack (_fun _BASIC -> _void))
-(define-symengine basic_new_stack (_fun _BASIC -> _void))
+(define _CSET_BASIC-pointer (_cpointer 'CSET_BASIC))
 
 (define-symengine basic_free_heap (_fun _BASIC_STRUCT-pointer -> _int)
   #:wrap (deallocator))
  
 (define-symengine basic_new_heap (_fun -> _BASIC_STRUCT-pointer)
   #:wrap (allocator basic_free_heap))
+
+(define-symengine setbasic_free (_fun _CSET_BASIC-pointer -> _void)
+  #:wrap (deallocator))
+ 
+(define-symengine setbasic_new (_fun -> _CSET_BASIC-pointer)
+  #:wrap (allocator setbasic_free))
+
+(define-symengine setbasic_size (_fun _CSET_BASIC-pointer -> _size))
+(define-symengine setbasic_get (_fun _CSET_BASIC-pointer _int _BASIC_STRUCT-pointer -> _int))
 
 (define-symengine symbol_set (_fun _BASIC_STRUCT-pointer _string -> _int))
 (define-symengine is_a_Number (_fun _BASIC_STRUCT-pointer -> _int))
@@ -62,6 +71,7 @@
 
 (define-symengine basic_add (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 (define-symengine basic_mul (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
+(define-symengine basic_div (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
 (define-symengine basic_eq (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
@@ -69,4 +79,5 @@
 (define-symengine basic_exp (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 (define-symengine basic_neg (_fun _BASIC_STRUCT-pointer _BASIC_STRUCT-pointer -> _int))
 
+(define-symengine basic_free_symbols (_fun _BASIC_STRUCT-pointer _CSET_BASIC-pointer -> _int))
 
