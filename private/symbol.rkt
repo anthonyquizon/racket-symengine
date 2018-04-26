@@ -9,7 +9,7 @@
 
 (struct Sym (value) 
   #:methods gen:equal+hash 
-  [(define (equal-proc a b equal?-recur) (sym= a b))
+  [(define (equal-proc a b equal?-recur) (= (ffi:basic_eq (Sym-value a) (Sym-value b)) 1))
    (define (hash-proc a hash-recur) 1)
    (define (hash2-proc a hash-recur) 1)]
 
