@@ -1,14 +1,14 @@
 #lang racket
 
-(require (prefix-in ffi: "ffi.rkt")
-         (prefix-in r: racket)
-         "symbol.rkt")
-
 (provide (rename-out [sym* *]
                      [sym+ +]
                      [sym/ /]
                      [sym= =]
                      [sym!= !=]))
+
+(require (prefix-in ffi: "ffi.rkt")
+         (prefix-in r: racket)
+         "symbol.rkt")
 
 (module+ test
   (require rackunit))

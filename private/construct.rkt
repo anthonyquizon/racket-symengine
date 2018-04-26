@@ -1,10 +1,5 @@
 #lang racket
 
-(require (prefix-in ffi: "ffi.rkt")
-         (prefix-in r: racket)
-         (for-syntax syntax/to-string)
-         "symbol.rkt")
-
 (provide (struct-out Sym)
          define-symbol
          integer
@@ -14,6 +9,11 @@
          integer?
          rational?
          symbol?)
+
+(require (prefix-in ffi: "ffi.rkt")
+         (prefix-in r: racket)
+         (for-syntax syntax/to-string)
+         "symbol.rkt")
 
 (define-syntax (define-symbol stx)
   (syntax-case stx ()

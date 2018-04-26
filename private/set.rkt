@@ -1,9 +1,9 @@
 #lang racket
 
+(provide setbasic->set)
+
 (require "symbol.rkt" 
          racket/set) 
-
-(provide setbasic->set)
 
 (define (setbasic->set s-set) 
   (define n (ffi:setbasic_size s-set))

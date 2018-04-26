@@ -1,9 +1,5 @@
 #lang racket
 
-(require ffi/unsafe
-         ffi/unsafe/define
-         ffi/unsafe/alloc)
-
 (provide basic_new_heap
          setbasic_new
          setbasic_size
@@ -30,8 +26,12 @@
          is_a_Rational
          is_a_Symbol
          is_a_Complex
-         is_a_RealDouble
-         )
+         is_a_RealDouble)
+
+(require ffi/unsafe
+         ffi/unsafe/define
+         ffi/unsafe/alloc)
+
 
 (define-ffi-definer define-symengine (ffi-lib "libsymengine"))
 

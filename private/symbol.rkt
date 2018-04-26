@@ -1,11 +1,11 @@
 #lang racket
 
-(require (prefix-in ffi: "ffi.rkt")
-         racket/struct)
-
 (provide (struct-out Sym)
          val
          symbol->string)
+
+(require (prefix-in ffi: "ffi.rkt")
+         racket/struct)
 
 (struct Sym (value) 
   #:methods gen:equal+hash 

@@ -1,5 +1,7 @@
 #lang racket
 
+(provide free_symbols)
+
 (require (prefix-in ffi: "ffi.rkt")
          "set.rkt")
 

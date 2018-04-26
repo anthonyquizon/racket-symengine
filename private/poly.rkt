@@ -1,10 +1,10 @@
 #lang racket
 
+(provide (rename-out [sym-exp exp]))
+
 (require (prefix-in ffi: "ffi.rkt")
          (prefix-in r: racket)
          (prefix-in s: "symbol.rkt"))
-
-(provide (rename-out [sym-exp exp]))
 
 (module+ test
   (require rackunit))
