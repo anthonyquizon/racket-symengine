@@ -2,8 +2,15 @@
 
 (provide setbasic->set)
 
-(require "symbol.rkt" 
+(require (prefix-in ffi: "ffi.rkt")
+         "symbol.rkt" 
          racket/set) 
+
+(module+ test
+  (require rackunit
+           quickcheck
+           "construct.rkt"
+           "symbol.rkt"))
 
 (define (setbasic->set s-set) 
   (define n (ffi:setbasic_size s-set))
@@ -13,3 +20,4 @@
     (ffi:setbasic_get s-set i s)
     (Sym s)))
 
+(module+ test)

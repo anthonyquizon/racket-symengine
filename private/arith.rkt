@@ -13,7 +13,7 @@
 (module+ test
   (require rackunit
            quickcheck
-           "construct.rkt"))
+           "number.rkt"))
 
 ;;TODO contracts
 (define (sym+ a b)

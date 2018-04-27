@@ -1,35 +1,14 @@
 #lang racket
 
-(provide (struct-out Sym)
-         define-symbol
-         integer
+(provide integer
          rational
-         symbol
          number?
          integer?
          rational?
          symbol?)
-
 (require (prefix-in ffi: "ffi.rkt")
          (prefix-in r: racket)
-         (for-syntax syntax/to-string)
          "symbol.rkt")
-
-(define-syntax (define-symbol stx)
-  (syntax-case stx ()
-    [(_ var)
-     (with-syntax ([s (syntax->string #'(var))])
-       (identifier? #'var)
-       (syntax/loc stx (define var (symbol s))))]
-    [(_ v0 v ...)
-      #'(begin
-          (define-symbol v0)
-          (define-symbol v ...))]))
-
-(define (symbol str) 
-  (define s (ffi:basic_new_heap))
-  (ffi:symbol_set s str)
-  (Sym s))
 
 (define (integer i)
   (cond 
@@ -82,7 +61,4 @@
 
 ;(define (complex? s)
   ;(= (ffi:is_a_Complex (val s)) 1))
-
-(define (symbol? s)
-  (= (ffi:is_a_Symbol (val s)) 1))
 
