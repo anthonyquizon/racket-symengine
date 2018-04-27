@@ -1,3 +1,3 @@
 racket-symengine
 ================
-README text here.
+Racket bindings to [SymEngine](https://github.com/symengine/symengine)
