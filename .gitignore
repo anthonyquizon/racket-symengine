@@ -12,5 +12,3 @@ foo
 *.dylib
 *.dll
 
-extern/
-symengine/

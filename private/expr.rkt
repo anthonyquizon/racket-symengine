@@ -18,11 +18,13 @@
   (setbasic->set s-set))
 
 (module+ test
-  (test-begin
+  (test-case
+    "free symbols"
     (define a (symbol "a"))
     (define b (symbol "b"))
     (define e (a:+ (a:+ a b) (n:integer 1)))
 
     (check-equal?
       (free_symbols e)
-      (set (symbol "a") (symbol "b")))))
+      (set (symbol "a") (symbol "b"))))
+  )
