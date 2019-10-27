@@ -1,10 +1,10 @@
 #lang racket
 
-(provide (rename-out [sym* *]
-                     [sym+ +]
-                     [sym/ /]
-                     [sym= =]
-                     [sym!= !=]
+(provide (rename-out [sym/* *]
+                     [sym/+ +]
+                     [sym/div /]
+                     [sym/= =]
+                     [sym/!= !=]
                      [sym/negate negate]
                      ))
 
@@ -18,48 +18,62 @@
            quickcheck
            "number.rkt"))
 
-;;TODO contracts
-(define (sym+ a b)
+(define (sym/+ a b)
   (define s (ffi:basic_new_heap))
   (ffi:basic_add s (val a) (val b))
   (Sym s))
 
 (module+ test
-  (check-equal?
-    (sym+ (integer 1) (integer 2))
-    (integer 3)))
+  (test-case 
+    "+"
+    (check-property
+      (property ([x arbitrary-integer]
+                 [y arbitrary-integer])
+                (equal? (sym/+ (integer x) (integer y))
+                        (integer (+ x y)))))))
 
-(define (sym* a b)
+(define (sym/* a b)
   (define s (ffi:basic_new_heap))
   (ffi:basic_mul s (val a) (val b))
   (Sym s))
 
 (module+ test
-  (check-equal?
-    (sym* (integer 2) (integer 2))
-    (integer 4)))
+  (test-case 
+    "*"
+    (check-property
+      (property ([x arbitrary-integer]
+                 [y arbitrary-integer])
+                (equal? (sym/* (integer x) (integer y))
+                        (integer (* x y)))))))
 
-(define (sym/ a b)
+(define (sym/div a b)
   (define s (ffi:basic_new_heap))
   (ffi:basic_div s (val a) (val b))
   (Sym s))
 
 (module+ test
-  (check-equal?
-    (sym/ (integer 5) (integer 2))
-    (rational 5/2)))
+  (test-case 
+    "/"
+    (check-property
+      (property ([n arbitrary-integer]
+                 [m arbitrary-integer])
+                (define m^ 
+                  (if (= m 0) 1 m))
 
-(define (sym= a b)
+                (equal? (sym/div (integer n) (integer m^))
+                        (rational (/ n m^)))))))
+
+(define (sym/= a b)
  (= (ffi:basic_eq (val a) (val b)) 1) )
 
 (module+ test
-  (check-true
-    (sym= (integer 2) (integer 2)))
+  (test-case 
+    "="
+    (check-property
+      (property ([x arbitrary-integer])
+                (sym/= (integer x) (integer x))))))
 
-  (check-false
-    (sym= (integer 2) (integer 5))))
-
-(define (sym!= a b)
+(define (sym/!= a b)
   (= (ffi:basic_eq (val a) (val b)) 0))
 
 (module+ test
@@ -67,7 +81,7 @@
     "not equal integer"
     (check-property
         (property ([x arbitrary-integer])
-                  (not (sym!= (integer x) (integer x)))))))
+                  (not (sym/!= (integer x) (integer x)))))))
 
 (define (sym/negate a)
   (define s (ffi:basic_new_heap))
