@@ -4,7 +4,9 @@
                      [sym+ +]
                      [sym/ /]
                      [sym= =]
-                     [sym!= !=]))
+                     [sym!= !=]
+                     [sym/negate negate]
+                     ))
 
 (require (prefix-in ffi: "ffi.rkt")
          (prefix-in r: racket)
@@ -64,16 +66,26 @@
   (test-case 
     "not equal integer"
     (check-property
-        (property ([x (arbitrary-integer)])
-                  (not 
-                    (equal? (sym!= (integer x) (integer x))))))))
+        (property ([x arbitrary-integer])
+                  (not (sym!= (integer x) (integer x)))))))
 
-(define (negate a)
+(define (sym/negate a)
   (define s (ffi:basic_new_heap))
   (ffi:basic_neg s (val a))
   (Sym s))
 
 (module+ test
-  (check-equal?
-    (negate (integer 2))
-    (integer -2)))
+  (test-case 
+    "negate"
+    (check-property
+        (property ([x arbitrary-integer])
+                  (equal? (sym/negate (integer x))
+                          (integer (- x))))))
+
+  (test-case 
+    "negate"
+    (check-property
+      (property ([x arbitrary-integer])
+                (equal? (sym/negate (sym/negate (integer x)))
+                        (integer x))))))
+
