@@ -32,8 +32,12 @@
          ffi/unsafe/define
          ffi/unsafe/alloc)
 
+(define LIB_SYMENGINE 
+  (or (getenv "LIB_SYMENGINE") "libsymengine"))
 
-(define-ffi-definer define-symengine (ffi-lib "libsymengine"))
+(println LIB_SYMENGINE)
+
+(define-ffi-definer define-symengine (ffi-lib LIB_SYMENGINE))
 
 (define _BASIC_STRUCT-pointer (_cpointer 'BASIC_STRUCT))
 (define _CSET_BASIC-pointer (_cpointer 'CSET_BASIC))

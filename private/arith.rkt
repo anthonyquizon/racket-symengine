@@ -12,6 +12,7 @@
 
 (module+ test
   (require rackunit
+           rackunit/quickcheck
            quickcheck
            "number.rkt"))
 
@@ -60,11 +61,12 @@
   (= (ffi:basic_eq (val a) (val b)) 0))
 
 (module+ test
-  (check-false
-    (sym!= (integer 2) (integer 2)))
-
-  (check-true
-    (sym!= (integer 2) (integer 5))))
+  (test-case 
+    "not equal integer"
+    (check-property
+        (property ([x (arbitrary-integer)])
+                  (not 
+                    (equal? (sym!= (integer x) (integer x))))))))
 
 (define (negate a)
   (define s (ffi:basic_new_heap))

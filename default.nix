@@ -1,10 +1,11 @@
 with import <nixpkgs> {};
-
-stdenv.mkDerivation rec {
-  name = "env";
-  env = buildEnv { name = name; paths = buildInputs; };
-  buildInputs = [
-    symengine
-  ];
-}
+let 
+  symengine_shared = import ./symengine_shared.nix;
+in 
+  stdenv.mkDerivation rec {
+    name = "racket-symengine";
+    env = buildEnv { name = name; paths = buildInputs; };
+    LIB_SYMENGINE="${symengine_shared}/lib/libsymengine";
+    buildInputs = [ symengine_shared ];
+  }
 
