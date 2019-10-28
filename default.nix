@@ -1,6 +1,6 @@
 with import <nixpkgs> {};
 let 
-  symengine_shared = import ./symengine_shared.nix;
+  symengine_shared = import ./symengine-shared.nix;
 in 
   stdenv.mkDerivation rec {
     name = "racket-symengine";
