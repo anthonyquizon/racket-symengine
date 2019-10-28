@@ -68,10 +68,11 @@
 
 (module+ test
   (test-case 
-    "="
+    "= concrete numbers"
     (check-property
       (property ([x arbitrary-integer])
-                (sym/= (integer x) (integer x))))))
+                (sym/= (integer x) (integer x))))) 
+  )
 
 (define (sym/!= a b)
   (= (ffi:basic_eq (val a) (val b)) 0))

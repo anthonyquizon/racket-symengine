@@ -4,11 +4,16 @@
          rational
          number?
          integer?
-         rational?
-         symbol?)
+         rational?)
+
 (require (prefix-in ffi: "ffi.rkt")
          (prefix-in r: racket)
          "symbol.rkt")
+
+(module+ test
+  (require rackunit
+           rackunit/quickcheck
+           quickcheck))
 
 (define (integer i)
   (cond 
@@ -17,7 +22,7 @@
      (ffi:integer_set_si s i)
      (Sym s)]
     [(integer? i) i]
-    [else (raise 'sym-type-error "integer")]))
+    [else (error "Symengine: value is not a racket integer")]))
 
 (define (real i)
   (cond 
@@ -25,29 +30,33 @@
      (define s (ffi:basic_new_heap))
      (ffi:real_double_set_d s i)
      (Sym s)]
-    [else (raise 'sym-type-error "real")]))
-
-(define (set_rational i j)
-  (define s (ffi:basic_new_heap))
-  (define m (integer i))
-  (define n (integer j))
-
-  (ffi:rational_set s (val m) (val n))
-  (Sym s))
+    [else (error "Symengine: value is not a racket real")]))
 
 (define (rational i [j null])
+  (define (set_rational i j)
+    (define s (ffi:basic_new_heap))
+    (define m (integer i))
+    (define n (integer j))
+
+    (ffi:rational_set s (val m) (val n))
+    (Sym s))
+
   (cond 
     [(and (null? j) (r:rational? i)) 
-     (set_rational (r:numerator i) (r:denominator i))]
+     (set_rational (r:numerator i) 
+                   (r:denominator i))]
     [(and (or (r:integer? i) (integer? i))
           (or (r:integer? j) (integer? j)))
      (set_rational i j)]
-    [else (raise 'sym-type-error "rational must be of integer integer or integer/integer")]))
+    [(or (symbol? i) (symbol? j))
+     (error "Symengine: rational is only for numbers, not symbols")]
+    [else 
+      (error "Symengine: rational must be of integer integer or integer/integer")]))
 
 (define (integer-value s)
   (cond 
     [(integer? s) (ffi:integer_get_si (val s))]
-    [else (raise 'sym-type-error #t)]))
+    [else (error "Symengine: value is not a sym integer")]))
 
 ;; TODO use contracts
 (define (number? s)

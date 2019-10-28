@@ -4,7 +4,7 @@
 
 (require (prefix-in ffi: "ffi.rkt")
          (prefix-in r: racket)
-         (prefix-in s: "symbol.rkt"))
+         "symbol.rkt")
 
 (module+ test
   (require rackunit))

@@ -9,7 +9,6 @@
 (module+ test
   (require rackunit
            quickcheck
-           "construct.rkt"
            "symbol.rkt"))
 
 (define (setbasic->set s-set) 
